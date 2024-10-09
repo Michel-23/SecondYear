@@ -4,7 +4,7 @@ template<typename T>
 class ArrayHandler {
 private:
     // Сколько памяти выделено
-    size_t _capacity;
+    size_t _size;
 
     // Сколько элементов хранится с точки зрения того,
     // кто использует класс ArrayHandler.
@@ -16,10 +16,10 @@ private:
 
     T _min;
 public:
-    ArrayHandler(size_t capacity = 10) {
-        _capacity = capacity;
+    ArrayHandler(size_t size = 10) {
+        _size = size;
         _length = 0;
-        _array = new T[capacity];
+        _array = new T[size];
         _max = std::numeric_limits<T>::min();
         _min = std::numeric_limits<T>::max();
     }
@@ -32,14 +32,12 @@ public:
     }
 
     void AppendElem(T elem) {
-        // [10, 20, 30, 12, -14]
-        // _length = 5
-        // _capacity = 5
-        if (_length >= _capacity) {
-            size_t newCapacity = _capacity * 2;
-            T* cpy = new T[newCapacity];
-            memcpy(cpy, _array, sizeof(T) * _capacity);
-            _capacity = newCapacity;
+        
+        if (_length >= _size) {
+            size_t newsize = _size * 2;
+            T* cpy = new T[newsize];
+            memcpy(cpy, _array, sizeof(T) * _size);
+            _size = newsize;
             delete[] _array;
             _array = cpy;
         }
