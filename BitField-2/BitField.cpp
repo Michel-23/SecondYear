@@ -1,4 +1,5 @@
 #include "BitField.h"
+#include <cstdint>
 
 BitField::BitField(size_t len) {
     _sizeBit = len;

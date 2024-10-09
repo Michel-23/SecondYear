@@ -25,10 +25,7 @@ public:
     }
 
     ~ArrayHandler() {
-        if (_array) {
-            delete[] _array;
-            _array = 0;
-        }
+        delete[] _array;
     }
 
     void AppendElem(T elem) {
