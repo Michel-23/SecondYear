@@ -1,5 +1,8 @@
+#pragma once
+
 #include "BitField.h"
 #include <cstdint>
+#include <vector>
 
 // если 1 - число входит в множество, если 0 - не входит
 
@@ -15,10 +18,11 @@ public:
     Set(const BitField& bf);
     Set& operator() (const Set& tmp);
     size_t GetMaxPower();
-    void InsertElem(uint64_t elem);
-    void DeleteElem(uint64_t elem);
+    void InsElem(uint64_t elem);
+    void DelElem(uint64_t elem);
     bool IsMember (uint64_t elem);
-    bool operator==(const Set& tmp);
+    bool operator==(const Set& tmp) const;
+    bool operator!= (const Set &s) const;
     Set& operator=(const Set& tmp);
     Set operator+(const Set& tmp);
     Set operator+(uint64_t tmp);
@@ -27,4 +31,5 @@ public:
     Set operator~();
     friend std::istream& operator>>(std::istream& istr, Set& set);
     friend std::ostream& operator<<(std::ostream& ostr, const Set& set);
+    std::vector<uint64_t> GetPrimary();
 };

@@ -1,6 +1,7 @@
 #include "Set.h"
 #include "BitField.h"
 #include <cstdint>
+#include <vector>
 
 Set::Set(size_t mp){
     _maxPover = mp;
@@ -37,11 +38,11 @@ size_t Set::GetMaxPower(){
     return _maxPover;
 }
 
-void Set::InsertElem(uint64_t elem){
+void Set::InsElem(uint64_t elem){
     _bitField.SetBit(elem);
 }
 
-void Set::DeleteElem(uint64_t elem){
+void Set::DelElem(uint64_t elem){
     _bitField.ClrBit(elem);
 }
 
@@ -49,8 +50,12 @@ bool Set::IsMember (uint64_t elem){
     return _bitField.GetBit(elem);
 }
 
-bool Set::operator==(const Set& tmp){
+bool Set::operator==(const Set& tmp) const{
     return _bitField == tmp._bitField;
+}
+
+bool Set::operator!= (const Set &s) const {
+    return !(*this == s);
 }
 
 Set& Set::operator=(const Set& tmp){
@@ -95,6 +100,7 @@ Set Set::operator*(const Set& tmp){
 Set Set::operator~(){
     Set res(_bitField);
     res._bitField = ~_bitField;
+    return res;
 }
 
 std::istream& operator>>(std::istream& istr, Set& set);
@@ -104,4 +110,10 @@ std::ostream& operator<<(std::ostream& ostr, const Set& set){
         ostr << (int)set._bitField.GetBit(i);
     }
     return ostr;
+}
+
+std::vector<uint64_t> Set::GetPrimary() {
+    std::vector<uint64_t> res;
+    // TODO: Реализовать код
+    return res;
 }
