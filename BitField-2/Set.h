@@ -12,7 +12,8 @@ private:
     size_t _maxPover; // мощность
 public:
     Set(size_t mp);
-    void Display();
+    void Display() const;
+    void DisplaySet();
     ~Set();
     Set(const Set& tmp);
     Set(const BitField& bf);
@@ -22,14 +23,13 @@ public:
     void DelElem(uint64_t elem);
     bool IsMember (uint64_t elem);
     bool operator==(const Set& tmp) const;
-    bool operator!= (const Set &s) const;
+    bool operator!= (const Set &s);
     Set& operator=(const Set& tmp);
     Set operator+(const Set& tmp);
     Set operator+(uint64_t tmp);
     Set operator-(uint64_t tmp);
     Set operator*(const Set& tmp);
     Set operator~();
-    friend std::istream& operator>>(std::istream& istr, Set& set);
     friend std::ostream& operator<<(std::ostream& ostr, const Set& set);
     std::vector<uint64_t> GetPrimary();
 };

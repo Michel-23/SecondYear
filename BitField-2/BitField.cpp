@@ -29,7 +29,7 @@ BitField::BitField(size_t len){
     std::memset(_mem, 0, _memSize * sizeof(uint16_t));
 }
 
-void BitField::Display(){
+void BitField::Display() const{
     for (int i = 0; i < _memSize; i++){
         std::cout << std::bitset<16>(_mem[i]) << " ";
     }
@@ -44,7 +44,8 @@ void BitField::DisplayMem(){
 }
 
 BitField::~BitField(){
-    delete[] _mem;
+    delete[] _mem; // Иван сказал убрать
+    _mem = nullptr;
 } 
 
 BitField::BitField(const BitField& tmp){
@@ -101,7 +102,7 @@ BitField& BitField::operator=(const BitField& tmp){
 }
 
 BitField BitField::operator|(const BitField& tmp){ // побитовое ИЛИ
-    BitField B(tmp.GetLength());
+    BitField B(tmp.GetLength()); 
     for (size_t i = 0; i < _memSize; i++){
         B._mem[i] = _mem[i] | tmp._mem[i];
     }
@@ -128,7 +129,7 @@ BitField BitField::operator^(const BitField& tmp){
     return B;
 }
 
-bool BitField::operator==(const BitField& tmp){
+bool BitField::operator==(const BitField& tmp) const{
     if (_sizeBit != tmp._sizeBit){
         return false;
     }
@@ -142,8 +143,71 @@ bool BitField::operator==(const BitField& tmp){
 
 BitField BitField::operator~(){
     BitField cpy = BitField(*this);
-    for (size_t i = 0; i < _memSize; ++i){
+    for (size_t i = 0; i < _memSize; i++){
         cpy._mem[i] = ~cpy._mem[i];
     }
+
+    if (_sizeBit > 0){ 
+        int remains = 16 - (16 * _memSize % _sizeBit);
+
+        if (remains != 16){
+            cpy._mem[_memSize - 1] &= (1 << remains) - 1;
+        }
+    }
+
     return cpy;
+}
+
+void BitField::ChangeNumberBits(size_t SizeBit){
+    if (SizeBit == this->_sizeBit){
+        return;
+    }
+
+    std::cout << "Left SizeBit = " << this->_sizeBit << std::endl;
+    std::cout << "Right SizeBit = " << SizeBit << std::endl;
+    
+    if (SizeBit < this->_sizeBit){
+        if (SizeBit % 16 == 0){
+            this->_memSize = SizeBit / 16;
+        }
+        else{
+            this->_memSize = SizeBit / 16 + 1;
+        }
+        uint16_t* NewMem = new uint16_t[_memSize]; 
+        for (size_t i = 0; i < _memSize; i++){
+            NewMem[i] = _mem[i];
+        }
+        delete[] _mem;
+        _mem = NewMem;
+
+        if (SizeBit >= 16){
+            size_t NewSizeBit = SizeBit % 16; // получим 2 (18 % 16 == 2)
+            this->_mem[_memSize - 1] &= (1 << NewSizeBit) - 1;
+        }
+        else{
+            this->_mem[_memSize - 1] &= (1 << SizeBit) - 1;
+        }
+    }
+
+    else{
+        /*sizebits = 2 (1) => 17 (2)*/
+        size_t Oldmemsize = _memSize;
+        if (SizeBit % 16 == 0){
+            _memSize = SizeBit / 16;
+        }
+        else{
+            _memSize = SizeBit / 16 + 1;
+        }
+
+        uint16_t* NewMem = new uint16_t[_memSize]; 
+        for (size_t i = 0; i < Oldmemsize; i++){
+            NewMem[i] = _mem[i];
+        }
+        for (size_t i = Oldmemsize; i < _memSize; i++){
+            NewMem[i] = 0;
+        }
+        delete[] _mem;
+        _mem = NewMem;
+    }
+    this->_sizeBit = SizeBit;
 }

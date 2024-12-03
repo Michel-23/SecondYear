@@ -1,3 +1,4 @@
+//#include "googletest-main/googletest/include/gtest/gtest.h"
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <iostream>
@@ -50,7 +51,7 @@ TEST(TestGroupName, Subtest_4) {
     bits.push_back(37);
 
     for (size_t i = 0; i < bits.size(); i++)
-      bf.SetBit(bits[i]);
+      bf.SetBit(bits[i]); // в значение bits[i] устанавливаем 1
 
     negBf = ~bf;
 
@@ -58,6 +59,10 @@ TEST(TestGroupName, Subtest_4) {
       expNegBf.SetBit(i);
     for (size_t i = 0; i < bits.size(); i++)
       expNegBf.ClrBit(bits[i]);
+
+    /*bf.Display();
+    negBf.Display();
+    expNegBf.Display();*/
 
     EXPECT_EQ(expNegBf, negBf);
 }
@@ -68,16 +73,16 @@ TEST(TestGroupName, Subtest_5) {
     Set set1(size1), set2(size2), set3(size1), expSet(size2);
     set1.InsElem(1);
     set1.InsElem(2);
-    set1.InsElem(4);
+    set1.InsElem(4); // set1 == 00010110 00000000 / _memSize = 1
     set2.InsElem(0);
     set2.InsElem(1);
     set2.InsElem(2);
     set2.InsElem(4);
-    set2.InsElem(6);
-    set3 = set1 * set2;
+    set2.InsElem(6); // set2 == 01010111 00000000 / _memSize = 1
+    set3 = set1 * set2; // 01101 / _sizeBit = 5
     expSet.InsElem(1);
     expSet.InsElem(2);
-    expSet.InsElem(4);
+    expSet.InsElem(4); // expSet == 00010110 00000000 / _sizeBit = 7
     EXPECT_EQ(expSet, set3);
 }
 
